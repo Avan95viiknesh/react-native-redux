@@ -17,6 +17,6 @@ export const themeSlice = createSlice({
 })
 
 // Action creators are generated for each case reducer function
-export const { changeMode } = themeSlice.actions
+export const { changeMode } = themeSlice.actions;
 
-export default themeSlice.reducer
+export default themeSlice.reducer;

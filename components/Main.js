@@ -1,6 +1,6 @@
-import * as React from "react";
+import React,{useState, useEffect}  from "react";
 import { NavigationContainer } from "@react-navigation/native";
-import { Switch } from 'react-native'
+import { Switch,StyleSheet } from 'react-native'
 import Home from "./Home";
 import Fav from "./Fav";
 import Profile from './Profile';
@@ -12,25 +12,42 @@ import { changeMode } from "./redux/changeColor";
 
 const Tab = createBottomTabNavigator();
 
-const theme = useSelector( (state) => {
-     state.color.value
-})
 
-const dispatch = useDispatch()
 
 export default function Main() {
+
+  const [isEnabled, setIsEnabled] = useState(false);
+  const toggleSwitch = () => setIsEnabled(previousState => !previousState);
+
+  const theme = useSelector( (state) => {
+    state.color.theme
+})
+ useEffect (()=>{
+  console.log((theme,"chcek"))
+ },[theme])
+
+const setColorMode = ()=>{
+  console.log("checked theme`",isEnabled)
+  dispatch(changeMode())
+  setIsEnabled(previousState  => !previousState)
+}
+
+const dispatch = useDispatch()
   return (
 
     <>
      <Switch
-    trackColor={{ false: "#767577", true: "#81b0ff" }}
-    thumbColor={isEnabled ? "#f5dd4b" : "#f4f3f4"}
-    onValueChange={dispatch(changeMode)}
-    value={isEnabled}
+       trackColor={{ false: "#767577", true: "#81b0ff" }}
+       thumbColor={isEnabled ? "#f5dd4b" : "#f4f3f4"}
+   // onPress={ () => dispatch(changeMode)}
+    onValueChange={setColorMode}
+        // value={theme === "light" ? styles.lightMode : styles.darkMode}
+    value= {isEnabled}
+  
   />
 
-    <NavigationContainer>
-      <Tab.Navigator>
+    <NavigationContainer style={[theme  === 'dark'  ?styles.darkMode:styles.lightMode ]}>
+      <Tab.Navigator  >
         <Tab.Screen
           name="Home"
           component={Home}
@@ -67,3 +84,19 @@ export default function Main() {
    
   );
 }
+
+
+const styles = StyleSheet.create({
+  lightMode: {
+    
+    backgroundColor:'white'
+  },
+ 
+  darkMode: {
+   
+    backgroundColor:'black',
+    
+
+},
+
+});
